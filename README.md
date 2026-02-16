@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="img/logos/app-logo.png" alt="ClipChop logo" width="200" />
+</p>
+
 # ClipChop
 
 As a football coach, I’m constantly digging through hour-long game footage to clip out stuff for other projects. Whether it’s highlights or lowlights, I usually jot down timestamps and a quick label for each moment. Then I’d open Adobe Premiere, Final Cut Pro, or DaVinci and clip everything by hand, which could take forever and was easy to mess up.
@@ -5,6 +9,27 @@ As a football coach, I’m constantly digging through hour-long game footage to 
 So I figured: why not automate this? That’s exactly what ClipChop does. Give it a CSV with your clip times, point it at your source video, pick an output folder, and it handles the rest.  
 
 Batch video clip extractor — chop videos into clips using CSV timecodes and `ffmpeg`.
+
+## Download & Install
+
+Head over to the [Releases](../../releases) page and grab the latest installer for your OS:
+
+| Platform              | File            |
+|-----------------------|-----------------|
+| macOS (Apple Silicon) | `.dmg`          |
+| macOS (Intel)         | `.dmg`          |
+| Windows               | `.exe` / `.msi` |
+| Linux                 | `.deb` / `.AppImage` |
+
+Just download, install, and run. The only extra thing you'll need is **[ffmpeg](https://ffmpeg.org/download.html)** installed on your machine — ClipChop uses it under the hood to do the actual cutting.
+
+## Screenshots
+
+![ClipChop screenshot 1](img/screenshots/1.png)
+
+![ClipChop screenshot 2](img/screenshots/2.png)
+
+![ClipChop screenshot 3](img/screenshots/3.png)
 
 ## Features
 
@@ -73,13 +98,17 @@ Microsoft Excel:
 
 Tip: Keep row 1 as headers and avoid blank rows in the middle of your data.
 
-## Prerequisites
+---
+
+## Development
+
+### Prerequisites
 
 - Rust toolchain (includes `cargo`)
 - Tauri CLI
 - `ffmpeg` installed and available on `PATH`
 
-## Local Run
+### Local Run
 
 From `src-tauri`:
 
@@ -87,7 +116,7 @@ From `src-tauri`:
 cargo tauri dev
 ```
 
-## Build Installer / Binary
+### Build Installer / Binary
 
 From `src-tauri`:
 
@@ -106,12 +135,12 @@ cargo tauri build --debug --bundles app
 Output:
 `src-tauri/target/debug/bundle/macos/ClipChop.app`
 
-## Notes
+### Notes
 
 - This project uses a static frontend in `src` (no Node bundler required).
 - Build per platform on that platform (or use CI runners for each OS target).
 
-## Pre-commit
+### Pre-commit
 
 This repo includes a pre-commit config at the repository root.
 
