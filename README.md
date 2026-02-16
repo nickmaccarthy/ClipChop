@@ -22,6 +22,16 @@ Head over to the [Releases](../../releases) page and grab the latest installer f
 
 Just download, install, and run. The only extra thing you'll need is **[ffmpeg](https://ffmpeg.org/download.html)** installed on your machine — ClipChop uses it under the hood to do the actual cutting.
 
+### macOS note
+
+Since the app isn't code-signed yet, macOS will block it with a "damaged" warning. After installing, open Terminal and run:
+
+```bash
+xattr -cr /Applications/ClipChop.app
+```
+
+Then it'll open normally. You only need to do this once.
+
 ## Screenshots
 
 ![ClipChop screenshot 1](img/screenshots/1.png)
