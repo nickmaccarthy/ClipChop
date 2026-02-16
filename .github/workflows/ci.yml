@@ -37,9 +37,6 @@ jobs:
         with:
           workspaces: src-tauri
 
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli --version '^2.0' --locked
-
       - name: Format check
         run: cargo fmt --all -- --check
 
@@ -92,8 +89,11 @@ jobs:
         with:
           workspaces: src-tauri
 
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
       - name: Install Tauri CLI
-        run: cargo install tauri-cli --version '^2.0' --locked
+        run: cargo binstall tauri-cli --version '^2.0' --no-confirm
 
       - name: Build Tauri bundles
         run: cargo tauri build --verbose
