@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClipChop</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header>
+        <h1>ClipChop</h1>
+        <p>Choose a CSV, source video, and output directory to export clips.</p>
+      </header>
+
+      <section class="panel">
+        <div class="label-row">
+          <label>CSV File</label>
+          <button id="csvHelpBtn" class="icon-btn" type="button" aria-label="Show CSV format help">?</button>
+        </div>
+        <div id="csvHelpPanel" class="csv-help" hidden>
+          <p>CSV must include three columns:</p>
+          <pre>Clip Name,Clip Start Time,Clip End Time
+Intro,00:00:50,00:01:06
+Highlight,00:02:19,00:02:28</pre>
+          <p>Accepted time formats: <code>HH:MM:SS:FF</code>, <code>HH:MM:SS</code>, <code>MM:SS</code>, or raw seconds.</p>
+        </div>
+        <div class="drop-field">
+          <div class="row">
+            <input id="csvPath" data-drop-kind="csv" type="text" readonly placeholder="Select CSV file" />
+            <button id="pickCsvBtn">Open CSV</button>
+          </div>
+          <p class="drop-hint">Drop CSV here</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label>Source Video</label>
+        <div class="drop-field">
+          <div class="row">
+            <input id="videoPath" data-drop-kind="video" type="text" readonly placeholder="Select source video file" />
+            <button id="pickVideoBtn">Open Video</button>
+          </div>
+          <p class="drop-hint">Drop video file here</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label>Output Directory</label>
+        <div class="drop-field">
+          <div class="row">
+            <input id="outputDir" data-drop-kind="output" type="text" readonly placeholder="Select output directory" />
+            <button id="pickOutputBtn">Open Output Dir</button>
+          </div>
+          <p class="drop-hint">Drop output folder here</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Encoding Settings</h2>
+        <div class="settings-grid">
+          <div>
+            <div class="setting-label-row">
+              <label for="processingMode">Export Mode</label>
+              <button class="setting-help-btn" type="button" title="Choose processing strategy: Copy Streams is fastest but keyframe-boundary cuts; Re-encode modes are slower but allow quality and resize settings.">?</button>
+            </div>
+            <select id="processingMode">
+              <option value="reencode_precise">Re-encode (Precise Cut, Current)</option>
+              <option value="copy_fast" selected>Copy Streams (Fastest, Keyframe Cut)</option>
+              <option value="reencode_fast_seek">Re-encode (Fast Seek)</option>
+            </select>
+            <p id="modeHint" class="mode-hint"></p>
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="resolution">Resolution</label>
+              <button class="setting-help-btn" type="button" title="Output frame size target. Source keeps original dimensions. 1080p/720p/480p resizes and letterboxes to fit.">?</button>
+            </div>
+            <select id="resolution">
+              <option value="source" selected>Source</option>
+              <option value="1080p">1080p</option>
+              <option value="720p">720p</option>
+              <option value="480p">480p</option>
+            </select>
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="preset">Speed Preset</label>
+              <button class="setting-help-btn" type="button" title="x264 encoder speed/efficiency tradeoff. Faster presets export sooner but may need more bitrate for similar quality.">?</button>
+            </div>
+            <select id="preset">
+              <option value="ultrafast" selected>ultrafast</option>
+              <option value="superfast">superfast</option>
+              <option value="veryfast">veryfast</option>
+              <option value="faster">faster</option>
+              <option value="fast">fast</option>
+              <option value="medium">medium</option>
+            </select>
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="crf">Quality (CRF)</label>
+              <button class="setting-help-btn" type="button" title="Constant Rate Factor for H.264 quality. Lower = better quality/larger files. Higher = smaller files/lower quality.">?</button>
+            </div>
+            <input id="crf" type="number" min="16" max="35" step="1" value="20" />
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="audioCodec">Audio</label>
+              <button class="setting-help-btn" type="button" title="AAC re-encodes audio, Copy keeps original audio stream, No Audio removes audio track.">?</button>
+            </div>
+            <select id="audioCodec">
+              <option value="aac" selected>AAC Encode</option>
+              <option value="copy">Copy Source Audio</option>
+              <option value="none">No Audio</option>
+            </select>
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="audioBitrate">Audio Bitrate (kbps)</label>
+              <button class="setting-help-btn" type="button" title="AAC bitrate target. Higher bitrate usually improves audio quality and increases file size.">?</button>
+            </div>
+            <input id="audioBitrate" type="number" min="64" max="320" step="1" value="128" />
+          </div>
+          <div>
+            <div class="setting-label-row">
+              <label for="fps">Output FPS (optional)</label>
+              <button class="setting-help-btn" type="button" title="Set output frame rate. Leave blank to keep source timing/frame rate behavior.">?</button>
+            </div>
+            <input id="fps" type="number" min="1" max="120" step="0.01" placeholder="Keep source" />
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="row split">
+          <button id="startBtn" class="primary">Start</button>
+          <button id="stopBtn" class="danger" disabled>Stop</button>
+        </div>
+        <div class="progress-wrap">
+          <progress id="progressBar" max="100" value="0"></progress>
+          <p id="progressText">Idle</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="row table-head">
+          <h2>CSV Preview</h2>
+          <div class="row-actions">
+            <button id="addRowBtn" type="button" aria-label="Add row">+</button>
+            <button id="removeRowBtn" type="button" aria-label="Remove selected row">-</button>
+          </div>
+        </div>
+        <p id="previewMeta">No CSV selected.</p>
+        <table id="previewTable">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>#</th>
+              <th>Clip Name</th>
+              <th>Clip Start Time</th>
+              <th>Clip End Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section class="panel">
+        <h2>Messages</h2>
+        <pre id="log"></pre>
+      </section>
+    </main>
+
+    <script src="./main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+# macOS / OS noise
+.DS_Store
+._*
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Rust / Tauri build artifacts
+src-tauri/target/
+src-tauri/gen/
+
+# Misc temporary files
+*.tmp
+*.swp
