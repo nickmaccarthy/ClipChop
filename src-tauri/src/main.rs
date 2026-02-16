@@ -156,7 +156,9 @@ fn preview_csv(csv_path: String) -> Result<CsvPreview, String> {
 fn stop_export(state: State<ProcessState>) -> Result<(), String> {
     state.stop_requested.store(true, Ordering::SeqCst);
     if let Some(child) = state.child.lock().map_err(|e| e.to_string())?.as_mut() {
-        child.kill().map_err(|e| format!("Failed to stop ffmpeg: {e}"))?;
+        child
+            .kill()
+            .map_err(|e| format!("Failed to stop ffmpeg: {e}"))?;
     }
     Ok(())
 }
@@ -366,7 +368,13 @@ fn run_export(
         } else {
             "mp4".to_string()
         };
-        let file_name = format!("{:03}-{}-{}.{}", idx + 1, safe_name, start_label, output_ext);
+        let file_name = format!(
+            "{:03}-{}-{}.{}",
+            idx + 1,
+            safe_name,
+            start_label,
+            output_ext
+        );
         let destination = output_path.join(file_name);
 
         emit_progress(
@@ -511,11 +519,7 @@ fn run_export(
             exported += 1;
         } else {
             failed += 1;
-            errors.push(format!(
-                "Row {} failed ({})",
-                idx + 2,
-                row.clip_name
-            ));
+            errors.push(format!("Row {} failed ({})", idx + 2, row.clip_name));
         }
 
         emit_progress(
@@ -595,14 +599,10 @@ fn read_clip_rows(csv_path: &str) -> Result<Vec<ClipRow>, String> {
 
     let idx_name = find_header_index(&headers, &["clip name", "name", "clip"])
         .ok_or_else(|| "CSV missing clip name column".to_string())?;
-    let idx_start = find_header_index(
-        &headers,
-        &["clip start time", "start time", "start", "in"],
-    )
-    .ok_or_else(|| "CSV missing clip start time column".to_string())?;
-    let idx_end =
-        find_header_index(&headers, &["clip end time", "end time", "end", "out"])
-            .ok_or_else(|| "CSV missing clip end time column".to_string())?;
+    let idx_start = find_header_index(&headers, &["clip start time", "start time", "start", "in"])
+        .ok_or_else(|| "CSV missing clip start time column".to_string())?;
+    let idx_end = find_header_index(&headers, &["clip end time", "end time", "end", "out"])
+        .ok_or_else(|| "CSV missing clip end time column".to_string())?;
 
     let mut rows = Vec::new();
     for record in reader.records() {
