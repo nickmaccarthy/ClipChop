@@ -56,12 +56,13 @@ jobs:
         include:
           - name: linux-x64
             runner: ubuntu-latest
+            bundles: deb,appimage
           - name: windows-x64
             runner: windows-latest
-          - name: macos-intel
-            runner: macos-13
+            bundles: nsis
           - name: macos-apple-silicon
             runner: macos-14
+            bundles: dmg
     defaults:
       run:
         working-directory: src-tauri
@@ -96,7 +97,7 @@ jobs:
         run: cargo binstall tauri-cli --version '^2.0' --no-confirm
 
       - name: Build Tauri bundles
-        run: cargo tauri build --verbose
+        run: cargo tauri build --verbose --bundles ${{ matrix.bundles }}
 
       - name: Upload bundle artifacts
         uses: actions/upload-artifact@v4
