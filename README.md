@@ -14,11 +14,10 @@ Batch video clip extractor — chop videos into clips using CSV timecodes and `f
 
 Head over to the [Releases](../../releases) page and grab the latest installer for your OS:
 
-| Platform              | File            |
-|-----------------------|-----------------|
-| macOS (Apple Silicon) | `.dmg`          |
-| macOS (Intel)         | `.dmg`          |
-| Windows               | `.exe` / `.msi` |
+| Platform              | File                 |
+|-----------------------|----------------------|
+| macOS (Apple Silicon) | `.dmg`               |
+| Windows               | `.exe` (installer)   |
 | Linux                 | `.deb` / `.AppImage` |
 
 Just download, install, and run. The only extra thing you'll need is **[ffmpeg](https://ffmpeg.org/download.html)** installed on your machine — ClipChop uses it under the hood to do the actual cutting.
