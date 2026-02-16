@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="img/logos/app-logo.png" alt="ClipChop logo" width="200" />
+</p>
+
 # ClipChop
 
 As a football coach, I’m constantly digging through hour-long game footage to clip out stuff for other projects. Whether it’s highlights or lowlights, I usually jot down timestamps and a quick label for each moment. Then I’d open Adobe Premiere, Final Cut Pro, or DaVinci and clip everything by hand, which could take forever and was easy to mess up.
@@ -5,6 +9,14 @@ As a football coach, I’m constantly digging through hour-long game footage to 
 So I figured: why not automate this? That’s exactly what ClipChop does. Give it a CSV with your clip times, point it at your source video, pick an output folder, and it handles the rest.  
 
 Batch video clip extractor — chop videos into clips using CSV timecodes and `ffmpeg`.
+
+## Screenshots
+
+![ClipChop screenshot 1](img/screenshots/1.png)
+
+![ClipChop screenshot 2](img/screenshots/2.png)
+
+![ClipChop screenshot 3](img/screenshots/3.png)
 
 ## Features
 

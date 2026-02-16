@@ -52,6 +52,7 @@ jobs:
   build:
     name: Build (${{ matrix.name }})
     runs-on: ${{ matrix.runner }}
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     strategy:
       fail-fast: false
       matrix:
@@ -120,6 +121,32 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: clipchop-*
+
+      - name: Collect release assets
+        run: |
+          mkdir -p dist
+          for dir in artifacts/clipchop-*/; do
+            platform=$(basename "$dir" | sed 's/clipchop-//')
+            find "$dir" -type f \( \
+              -name '*.dmg' -o \
+              -name '*.deb' -o \
+              -name '*.rpm' -o \
+              -name '*.AppImage' -o \
+              -name '*.exe' -o \
+              -name '*.msi' \
+            \) | while read -r f; do
+              ext="${f##*.}"
+              cp "$f" "dist/ClipChop-${platform}.${ext}"
+            done
+          done
+          echo "Release assets:"
+          ls -la dist/
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -130,6 +157,7 @@ jobs:
         with:
           semantic_version: 24
           extra_plugins: |
+            conventional-changelog-conventionalcommits@8
             @semantic-release/commit-analyzer@13
             @semantic-release/release-notes-generator@14
             @semantic-release/github@11
